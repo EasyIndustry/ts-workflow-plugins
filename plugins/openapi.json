@@ -1,0 +1,11 @@
+{
+  "name": "openapi",
+  "description": "Convierte operaciones de una API descrita con OpenAPI 3 en efectos: el flujo escribe por la API del sistema, con sus permisos y reglas.",
+  "version": "0.1.0",
+  "path": "openapi",
+  "permisos": ["red"],
+  "maintainer": "EasyIndustry",
+  "repo_url": "https://github.com/EasyIndustry/ts-workflow-plugins",
+  "compatible_core": ">=0.3.0 <0.4.0",
+  "license": "MIT"
+}
