@@ -1,0 +1,74 @@
+name: ci
+on:
+  push:
+    branches: [cured, drafts]
+  pull_request:
+# Nunca pull_request_target: el código de un PR no corre con permisos del repo.
+permissions:
+  contents: read
+jobs:
+  fichas:
+    runs-on: ubuntu-latest
+    steps:
+      # El validador y el schema salen de la rama base; del PR solo se leen datos.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          path: base
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          path: pr
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts
+        working-directory: base
+      - name: Validar fichas
+        run: node base/scripts/validar-fichas.mjs pr base/schema/plugin.schema.json
+
+  tests:
+    # Un PR desde un fork no corre acá: su código no se ejecuta hasta que alguien lo revise y lo traiga a una rama propia.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { node: 20, postgres: 14 }
+          - { node: 22, postgres: 17 }
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}-alpine
+        env:
+          POSTGRES_PASSWORD: solo-ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PRUEBAS_POSTGRES_URL: postgres://postgres:solo-ci@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Tipos
+        run: npm run typecheck
+      - name: Tests
+        run: npm test
+      - name: dist/ coincide con el build
+        run: |
+          npm run build
+          if [ -n "$(git status --porcelain -- dist)" ]; then
+            git status --short -- dist
+            echo "::error::dist/ no coincide con el código. Corré npm run build y commiteá dist/."
+            exit 1
+          fi

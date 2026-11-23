@@ -1,0 +1,34 @@
+{
+  "name": "ts-workflow-plugins",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plugins genéricos para ts-workflow-core: el contrato, un ejecutor común de reacciones y un paquete por carpeta.",
+  "license": "MIT",
+  "author": "EasyIndustry",
+  "repository": { "type": "git", "url": "git+https://github.com/EasyIndustry/ts-workflow-plugins.git" },
+  "type": "module",
+  "exports": {
+    "./*": { "types": "./dist/*/src/index.d.ts", "default": "./dist/*/src/index.js" }
+  },
+  "files": ["dist", "LICENSE", "README.md"],
+  "sideEffects": false,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.check.json",
+    "test": "vitest run",
+    "fichas": "node scripts/validar-fichas.mjs . schema/plugin.schema.json"
+  },
+  "peerDependencies": {
+    "ts-workflow-core": ">=0.3.0 <0.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.15",
+    "@types/pg": "8.23.1",
+    "ajv": "8.20.0",
+    "pg": "8.23.1",
+    "ts-workflow-core": "github:EasyIndustry/ts-workflow-core#f80fff40a79de735fd87b3039a6b58920e9cfa05",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

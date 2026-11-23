@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/EasyIndustry/ts-workflow-plugins/schema/plugin.schema.json",
+  "title": "Ficha de un plugin de ts-workflow-core",
+  "description": "Un archivo plugins/<name>.json por plugin. El código vive en la carpeta <name>/ de este repo.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "description", "version", "path", "permisos", "maintainer", "repo_url", "compatible_core", "license"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Coincide con el nombre del archivo, con la carpeta y con el id del plugin.",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "description": { "type": "string", "description": "Qué hace, en una línea.", "minLength": 10, "maxLength": 200 },
+    "version": {
+      "type": "string",
+      "description": "Versión del plugin (semver). Coincide con la que exporta su código.",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$"
+    },
+    "path": { "type": "string", "description": "Carpeta del plugin en este repo.", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "permisos": {
+      "type": "array",
+      "description": "Lo que el plugin necesita poder hacer. Es la superficie de acceso que le da quien lo instala.",
+      "items": { "type": "string", "enum": ["db:lectura", "db:escritura", "db:ddl", "red", "archivos", "procesos"] },
+      "uniqueItems": true
+    },
+    "maintainer": { "type": "string", "description": "Usuario u organización de GitHub responsable.", "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$" },
+    "repo_url": { "type": "string", "description": "De dónde sale el código (procedencia).", "pattern": "^https://" },
+    "compatible_core": { "type": "string", "description": "Rango semver de ts-workflow-core contra el que se probó.", "minLength": 1 },
+    "license": { "type": "string", "description": "Identificador SPDX.", "minLength": 1 }
+  }
+}

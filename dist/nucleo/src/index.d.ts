@@ -1,0 +1,3 @@
+export { definirPlugin, efectosDe, ErrorPlugin, PERMISOS, type Cadena, type DefinicionPlugin, type Detener, type EfectoDePlugin, type EjecutarEfecto, type EntradaEfecto, type EventoDePlugin, type EventoEntrante, type Permiso, type Plugin, type ResultadoSincronizacion, } from "./contrato.js";
+export { crearAlmacenMemoria, crearEjecutor, ErrorDefinitivo, type Almacen, type Ejecutor, type EstadoResultado, type Fallido, type Objetivo, type OpcionesEjecutor, type ResultadoObjetivo, } from "./ejecutor.js";
+export { suscripcionesNecesarias } from "./versiones.js";
