@@ -1,0 +1,11 @@
+{
+  "name": "postgres-triggers",
+  "description": "Eventos de filas de Postgres por outbox transaccional, con triggers creados a demanda desde las suscripciones y una lista permitida.",
+  "version": "0.1.0",
+  "path": "postgres-triggers",
+  "permisos": ["db:lectura", "db:escritura", "db:ddl"],
+  "maintainer": "EasyIndustry",
+  "repo_url": "https://github.com/EasyIndustry/ts-workflow-plugins",
+  "compatible_core": ">=0.3.0 <0.4.0",
+  "license": "MIT"
+}
